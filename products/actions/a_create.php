@@ -8,39 +8,37 @@ if (isset($_SESSION["user"])) {
     header("Location: ../../home.php");
     exit;
 }
+
 require_once '../../components/db_connect.php';
 require_once '../../components/file_upload.php';
+
 if ($_POST) {
-    //$course_id = $_POST['course_id'];
     $name = $_POST["name"];
-    //$picture = $_POST['picture'];
     $availability = $_POST["availability"];
     $description = $_POST["description"];
     $price = $_POST["price"];
     $date = $_POST["date"];
 
     $uploadError = '';
-    //this function exists in the service file upload.
-    $picture = file_upload($_FILES['picture'], 'courses');
-    if ($picture == 'none') {
-        $sql = "INSERT INTO courses (name, picture, availability , description, price , date) 
-                 VALUES   ('$name','$picture->fileName','$availability','$price','$date')";
-    } else {
-        $sql = "INSERT INTO courses (name, picture, availability , description, price, date) 
-                 VALUES   ('$name','$picture->fileName','$availability','$price','$date')";
-    }
 
+    $picture = file_upload($_FILES['picture'], 'courses');
+
+    if ($picture == 'none') {
+        $sql = "INSERT INTO courses (name, picture, availability, description, price, date) VALUES ('$name', '$picture->fileName', '$availability', '$description', '$price', '$date')";
+    } else {
+        $sql = "INSERT INTO courses (name, picture, availability, description, price, date) VALUES ('$name', '$picture->fileName', '$availability', '$description', '$price', '$date')";
+    }
 
     if (mysqli_query($connect, $sql) === true) {
         $class = "success";
         $message = "The entry below was successfully created <br>
-            <table class='table w-50'><tr>
-            <td>$name</td>
-            <td>$availability</td>
-            <td>$description</td>
-            <td>$price</td>
-            <td>$date</td>
-            </tr></table><hr>";
+        <table class='table w-50'><tr>
+        <td>$name</td>
+        <td>$availability</td>
+        <td>$description</td>
+        <td>$price</td>
+        <td>$date</td>
+        </tr></table><hr>";
         $uploadError = ($picture->error != 0) ? $picture->ErrorMessage : '';
     } else {
         $class = "danger";
@@ -49,7 +47,7 @@ if ($_POST) {
     }
     mysqli_close($connect);
 } else {
-    header("location: ../error.php");
+    header("Location: ../error.php");
 }
 ?>
 
@@ -77,5 +75,3 @@ if ($_POST) {
         </div>
     </div>
 </body>
-
-</html>
